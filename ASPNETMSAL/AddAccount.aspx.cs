@@ -22,18 +22,22 @@ namespace ASPNETMSAL
         {
             if (!this.IsPostBack)
             {
-
+                // if the url params contain code then it is rediected from authorization end point after user has logged in 
+                //given permissions to for scopes
                 if (this.Page.Request.Params["code"] != null)
                 {
+                    // Get access token using auth code
                     FinalizeAccount(this.Page.Request.Params["code"]);
                 }
                 else
                 {
+                    // Add new account
                     AddNewAccount();
                 }
             }
         }
         
+        //Get Current User Cache file
 
         string CurrentUserCachefilepath
         {
@@ -55,16 +59,21 @@ namespace ASPNETMSAL
                 return _authhelper;
             }
         }
+
+        // Add account by redurecting the user to auth url which prompts user to sign into the the new account and
+        // confirm permissions to scopes. Once done it redirects to the Redircet url (Which in our case is this page itself) with the 'code' param in url
         async void AddNewAccount()
         {
             Uri uri = await authhelper.AuthorizationUri;
             Response.Write("<script>location.href='" + uri.AbsoluteUri + "'</script>");
         }
 
-
+        // Add account to token caceh file by gettign access token
         async void FinalizeAccount(string code)
         {
             AuthenticationResult token = await authhelper.GetAccessToken(code);
+
+            // Access token is retreived , the page gets redirected to default page
             Response.Redirect("/");
         }
     }

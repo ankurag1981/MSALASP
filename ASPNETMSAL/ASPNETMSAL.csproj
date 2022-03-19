@@ -283,6 +283,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Default.aspx" />
+    <Content Include="DeleteAccount.aspx" />
     <Content Include="DeleteEvent.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -338,6 +339,13 @@
     </Compile>
     <Compile Include="AddAccount.aspx.designer.cs">
       <DependentUpon>AddAccount.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DeleteAccount.aspx.cs">
+      <DependentUpon>DeleteAccount.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DeleteAccount.aspx.designer.cs">
+      <DependentUpon>DeleteAccount.aspx</DependentUpon>
     </Compile>
     <Compile Include="DeleteEvent.aspx.cs">
       <DependentUpon>DeleteEvent.aspx</DependentUpon>

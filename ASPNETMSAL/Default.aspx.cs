@@ -17,6 +17,7 @@ using System.Security.Claims;
 
 namespace ASPNETMSAL
 {
+
     public partial class _Default : Page
     {
         protected void Page_Load(object sender, EventArgs e)
@@ -31,14 +32,19 @@ namespace ASPNETMSAL
 
         protected void Button1_Click(object sender, EventArgs e)
         {
+           // redirect to AddAccount page 
            Response.Redirect("/AddAccount.aspx");
         }
               
+        /// <summary>
+        /// Gets token cache file path for current user.There is one token cache file for each user
+        /// </summary>
         string CurrentUserCachefilepath
         {
             get
             {
                 string user = "User1"; // For real multi user application replace this with: HttpContext.Current.User.Identity.Name;
+                // Server.MapPath methid is available only in Page class hence need to define here instead of AuthorizationServciesHelper class
                 string cachefilepath = Server.MapPath("/") + user+"_" + ConfigurationManager.AppSettings["CacheFilePath"];
                 return cachefilepath;
             }
@@ -55,7 +61,9 @@ namespace ASPNETMSAL
         }
         async void InitAccounts()
         {
+            // Get all accounts in user's token cache
             var allacc=await authhelper.GetAllAccounts();
+
             IEnumerable<LoginAccount> accc = allacc.Select(x => new LoginAccount() {AccountName=x.Username,AccountId=x.HomeAccountId.Identifier });
             DropDownList1.Items.Clear();
             DropDownList1.Items.Add(new System.Web.UI.WebControls.ListItem("Select Account", "0"));
@@ -69,6 +77,7 @@ namespace ASPNETMSAL
 
         }              
 
+        // Set selected account
         protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
         {
             btnCompose.Enabled = false;
@@ -80,26 +89,32 @@ namespace ASPNETMSAL
             }
         }
 
+        // Get access token for selected account
         async void SetSelectedAccessToken(string selacc)
         {
+            //Set selected account session key
             SelectedAccount = selacc;
+            //Get access token from cache file using AuthorizationServices Helper methods
             var authres = await authhelper.GetAccessTokenfromCache(SelectedAccount);
             AccessToken = authres;
             GetEvents();
         }
 
+        //Set selected account session key
         string SelectedAccount
         {
             get { return (Session["SelectedAccount"] != null) ? Session["SelectedAccount"].ToString() : ""; }
             set { Session["SelectedAccount"] = value; }
         }
 
-        
+        //Set Access Token session key
         string AccessToken
         {
             get { return (Session["AccessToken"] != null) ? Session["AccessToken"].ToString() : ""; }
             set { Session["AccessToken"] = value; }
         }
+
+        //Get Events via OutservicesHelper class methods
         async void GetEvents()
         {
             OutlookServicesHelper outlookhelper = new OutlookServicesHelper(AccessToken);
@@ -130,5 +145,9 @@ namespace ASPNETMSAL
             }
         }
 
+        protected void btnRemoveAccount_Click(object sender, EventArgs e)
+        {
+            //bool bremoved=await authhelper.RemoveAccount(SelectedAccount);
+        }
     }
 }

@@ -11,6 +11,9 @@
         <div class="col-md-8">
            <asp:DropDownList ID="DropDownList1" AutoPostBack="True" runat="server" Height="57px" OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged" CssClass="form-control"></asp:DropDownList>
         </div>
+         <div class="col-md-4">
+             <asp:Button ID="btnRemoveAccount" runat="server" Text="Button" OnClick="btnRemoveAccount_Click" />
+        </div>
     </div>
     <div class="row content-div">
         <div class="col-md-4">         

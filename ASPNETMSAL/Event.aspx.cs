@@ -9,31 +9,41 @@ namespace ASPNETMSAL
 {
     public partial class Event : System.Web.UI.Page
     {
+        // Get access token from session cookie
         string AccessToken
         {
             get { return (Session["AccessToken"] != null) ? Session["AccessToken"].ToString() : ""; }
             set { Session["AccessToken"] = value; }
         }
+
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!this.IsPostBack)
             {
+                //if Id param is presnet in URL then use this page to update an event 
                 if (this.Request.Params["id"] != null)
                 {
+                    //Hide Create button
                     btnCreate.Visible = false;
                     InitEvent(this.Request.Params["id"]);
                 }
+                //else use this page to create a new Event.
                 else btnUpdate.Visible = false;
             }
             
 
         }
 
+        // Get Event to be updated using Event Id
         async void InitEvent(string evid)
         {
+
             OutlookServicesHelper ohelper = new OutlookServicesHelper(AccessToken);
+            
             Microsoft.Graph.Event ev = await ohelper.GetEventById(evid);
             //txtStart.TextMode = TextBoxMode.DateTime;
+            // Date time input fields will be initilaized using this format only - yyyy-MM-ddThh:mm
             txtStart.Text = DateTime.Parse(ev.Start.DateTime).ToString("yyyy-MM-ddThh:mm"); 
             //txtStart.
 
@@ -105,9 +115,7 @@ namespace ASPNETMSAL
             ev.Body.Content = txtBody.Text;
             if (txtAttendees.Text != "")
             {
-                string[] emails = txtAttendees.Text.Split(';');
-                //Microsoft.Graph.Attendee att = new Microsoft.Graph.Attendee();
-                //att.EmailAddress =
+                string[] emails = txtAttendees.Text.Split(';');                
                 ev.Attendees = emails.Select(x => new Microsoft.Graph.Attendee() { EmailAddress = new Microsoft.Graph.EmailAddress() { Address = x },Type=Microsoft.Graph.AttendeeType.Required });
 
             }

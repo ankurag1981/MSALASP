@@ -33,6 +33,15 @@ namespace ASPNETMSAL
         protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
 
         /// <summary>
+        /// btnRemoveAccount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnRemoveAccount;
+
+        /// <summary>
         /// btnCompose control.
         /// </summary>
         /// <remarks>
