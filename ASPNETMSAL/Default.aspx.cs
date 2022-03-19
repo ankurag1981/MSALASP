@@ -121,7 +121,9 @@ namespace ASPNETMSAL
             var userev= await outlookhelper.Events;
 
             var tfomrat= "dd/MM/yyyy hh:mm tt";
-            var udata= userev.Select(ev => new { Id=ev.Id, Start = DateTime.Parse(ev.Start.DateTime).ToString(tfomrat), End = DateTime.Parse(ev.End.DateTime).ToString(tfomrat),Subject=ev.Subject,StartTimeZone=ev.OriginalStartTimeZone,EndTimeZone=ev.OriginalEndTimeZone, BodyPreview = ev.BodyPreview });
+            TimeZoneInfo indiatimezone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+            
+            var udata= userev.Select(ev => new { Id=ev.Id, Start = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Parse(ev.Start.DateTime), indiatimezone).ToString(tfomrat), End = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Parse(ev.End.DateTime),indiatimezone).ToString(tfomrat),Subject=ev.Subject,StartTimeZone=ev.OriginalStartTimeZone,EndTimeZone=ev.OriginalEndTimeZone, BodyPreview = ev.BodyPreview });
             
             GridView1.DataSource = udata;//.Select(ev=> new {StartTime=ev.Start.ToString(),EndTime=ev.End.ToString(),Attendees=ev.Attendees,BodyPreview=ev.BodyPreview});
             GridView1.DataBind();

@@ -42,12 +42,12 @@ namespace ASPNETMSAL
             OutlookServicesHelper ohelper = new OutlookServicesHelper(AccessToken);
             
             Microsoft.Graph.Event ev = await ohelper.GetEventById(evid);
-            //txtStart.TextMode = TextBoxMode.DateTime;
             // Date time input fields will be initilaized using this format only - yyyy-MM-ddThh:mm
-            txtStart.Text = DateTime.Parse(ev.Start.DateTime).ToString("yyyy-MM-ddThh:mm"); 
+            TimeZoneInfo indiatimezone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+            txtStart.Text = TimeZoneInfo.ConvertTimeFromUtc( DateTime.Parse(ev.Start.DateTime),indiatimezone).ToString("yyyy-MM-ddThh:mm"); 
             //txtStart.
 
-            txtEnd.Text = DateTime.Parse(ev.End.DateTime).ToString("yyyy-MM-ddThh:mm"); 
+            txtEnd.Text = TimeZoneInfo.ConvertTimeFromUtc( DateTime.Parse(ev.End.DateTime),indiatimezone).ToString("yyyy-MM-ddThh:mm"); 
             txtSubject.Text = ev.Subject;
             txtAttendees.Text = String.Join(";",ev.Attendees.Select(x => x.EmailAddress.Address));
             txtBody.Text = ev.Body.Content;
