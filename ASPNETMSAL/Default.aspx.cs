@@ -59,12 +59,12 @@ namespace ASPNETMSAL
                 return _authhelper;
             }
         }
-        async void InitAccounts()
+        void InitAccounts()
         {
             // Get all accounts in user's token cache
-            var allacc=await authhelper.GetAllAccounts();
+            //var allacc= await authhelper.GetAllAccounts();
 
-            IEnumerable<LoginAccount> accc = allacc.Select(x => new LoginAccount() {AccountName=x.Username,AccountId=x.HomeAccountId.Identifier });
+            IEnumerable<LoginAccount> accc = authhelper.GetAllAccountsFromCache(); //allacc.Select(x => new LoginAccount() {AccountName=x.Username,AccountId=x.HomeAccountId.Identifier });
             DropDownList1.Items.Clear();
             DropDownList1.Items.Add(new System.Web.UI.WebControls.ListItem("Select Account", "0"));
             DropDownList1.Items.AddRange(accc.Select(x => new System.Web.UI.WebControls.ListItem(x.AccountName, x.AccountName)).ToArray());
@@ -150,6 +150,11 @@ namespace ASPNETMSAL
         protected void btnRemoveAccount_Click(object sender, EventArgs e)
         {
             //bool bremoved=await authhelper.RemoveAccount(SelectedAccount);
+            try
+            {
+               var v= authhelper.GetAllAccountsFromCache();
+            }
+            catch(Exception ex) { }
         }
     }
 }

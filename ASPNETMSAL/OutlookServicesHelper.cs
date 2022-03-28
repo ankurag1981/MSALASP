@@ -17,6 +17,7 @@ using Microsoft.Extensions.Caching.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.IO;
 
 namespace ASPNETMSAL
@@ -270,6 +271,17 @@ namespace ASPNETMSAL
         {
             IEnumerable<IAccount> res = await AuthenticationClient.GetAccountsAsync();
             return res;
+        }
+
+        public IEnumerable<LoginAccount> GetAllAccountsFromCache()
+        {
+            //IEnumerable<IAccount> res = await AuthenticationClient.GetAccountsAsync();
+            string strcache = System.IO.File.ReadAllText(CacheFilePath);
+            
+            JObject res = JObject.Parse(strcache);
+            JToken acct= res.SelectToken("$.Account");
+            IEnumerable<LoginAccount> allaccts = acct.Children().Select(t=>new LoginAccount {AccountId=t.First().Value<string>("home_account_id"),AccountName= t.First().Value<string>("username") });           
+            return allaccts;
         }
 
         /// <summary>
